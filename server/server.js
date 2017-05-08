@@ -22,12 +22,12 @@ io.on('connection', (socket) => {
   // listen for incomming message and forward to all users
   socket.on('createMessage', function(theMessage) {
     console.log('incomming message: ', theMessage);
-    // var message = { "from": theMessage.from, "text": theMessage.text, "createdAt": new Date() };
-    // socket.emit('newMessage', message);
+    var message = { "from": theMessage.from, "text": theMessage.text, "createdAt": new Date() };
+    io.emit('newMessage', message);
 
   });
 
-  socket.emit('newMessage', { "text": "the message text...... " });
+  // socket.emit('newMessage', { "text": "the message text...... " });
 
 })
 
