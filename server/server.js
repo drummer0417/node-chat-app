@@ -16,8 +16,19 @@ io.on('connection', (socket) => {
   console.log(`Hi new user!`);
 
   socket.on('disconnect', () => {
-    console.log('client disconnected');
+    console.log('client was disconnected');
   })
+
+  // listen for incomming message and forward to all users
+  socket.on('createMessage', function(theMessage) {
+    console.log('incomming message: ', theMessage);
+    // var message = { "from": theMessage.from, "text": theMessage.text, "createdAt": new Date() };
+    // socket.emit('newMessage', message);
+
+  });
+
+  socket.emit('newMessage', { "text": "the message text...... " });
+
 })
 
 server.listen(port, () => {
