@@ -12,5 +12,5 @@ socket.on('disconnect', function() {
 });
 
 socket.on('newMessage', function(message) {
-  console.log('en hier is ie dan: ', message);
+  console.log(message);
 });

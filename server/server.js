@@ -22,23 +22,21 @@ io.on('connection', (socket) => {
   // listen for incomming message and forward to all users
   socket.on('createMessage', function(theMessage) {
     console.log('incomming message: ', theMessage);
-    var message = { "from": theMessage.from, "text": theMessage.text, "createdAt": new Date() };
-
-    // to send to everybody
-    // io.emit('newMessage', message);
-
-    // to send to everybody but self
-    socket.broadcast.emit('newMessage', message);
 
     // to send to nobody but self
     var welcomeMessage = `Hi ${theMessage.from}, welkom in the chat!`;
-
     console.log(welcomeMessage);
-    socket.emit('newMessage', { "text": welcomeMessage });
-    // socket.emit('newMessage', message);
+    socket.emit('newMessage', { "from": "Admin", "text": welcomeMessage, "createdAt": new Date().getTime() });
+
+    // to send to everybody but self
+    socket.broadcast.emit('newMessage', { "from": "Admin", "Text": "New user joined", "createdAt": new Date().getTime() });
+
+    // to send to everybody
+    var message = { "from": theMessage.from, "text": theMessage.text, "createdAt": new Date().getTime() };
+    io.emit('newMessage', message);
+
+
   });
-
-
 })
 
 server.listen(port, () => {
