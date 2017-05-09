@@ -1,7 +1,7 @@
 const mocha = require('mocha');
 const expect = require('expect');
 
-const { generateMessage } = require('./../utils/message');
+const { generateMessage, generateLocationMessage } = require('./../utils/message');
 
 describe('UTILS generateMessage', () => {
 
@@ -18,4 +18,15 @@ describe('UTILS generateMessage', () => {
     expect(generatedMessage.createdAt).toBeA('number');
   })
 
-})
+});
+
+describe('UTILS generateLocationMessage', () => {
+
+  it('Should generaete a correct loocation message', () => {
+    var generatedLocationMessage = generateLocationMessage("Admin", "54,123", "5.123");
+
+    expect(generatedLocationMessage).toContain({ "from": "Admin", "url": "https://google.com/maps?q=54,123,5.123" });
+    expect(generatedLocationMessage.createdAt).toBeA('number');
+  })
+
+});

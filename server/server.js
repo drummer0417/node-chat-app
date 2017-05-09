@@ -3,7 +3,7 @@ const http = require('http');
 const express = require('express');
 const socketIO = require('socket.io');
 
-const { generateMessage } = require('./utils/message');
+const { generateMessage, generateLocationMessage } = require('./utils/message');
 
 const publicPath = path.join(__dirname, '../public');
 const port = process.env.PORT || 3000;
@@ -24,15 +24,11 @@ io.on('connection', (socket) => {
   // listen for incomming message and forward to all users
   socket.on('createMessage', (theMessage, callback) => {
     console.log('incomming message: ', theMessage);
-    if (callback) {
-      callback("This is from server");
+    if(callback) {
+      callback("Ok");
     }
-
-    // console.log('message: ', generateMessage("Hans", "Dit is de msg text!!!"));
-
     // to send to nobody but self
     var welcomeMessage = `Hi ${theMessage.from}, welkom in the chat!`;
-    // console.log(welcomeMessage);
     socket.emit('newMessage', generateMessage("Admin", welcomeMessage));
 
     // to send to everybody but self
@@ -42,8 +38,14 @@ io.on('connection', (socket) => {
     var message = generateMessage(theMessage.from, theMessage.text);
     io.emit('newMessage', message);
   });
+
+  socket.on('createLocationMessage', (location) => {
+    console.log(`location: ${JSON.stringify(location)}`);
+    io.emit('newLocationMessage', generateLocationMessage("Admin", location.latitude, location.longitude));
+    // io.emit('newLocationMessage', `https://google.com/maps?q=${location.latitude},${location.longitude}`);
+  })
 })
 
 server.listen(port, () => {
-  console.log(`Server started on port ${port} `);
+  console.log(`Server started on port ${port}`);
 })
