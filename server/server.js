@@ -22,13 +22,17 @@ io.on('connection', (socket) => {
   })
 
   // listen for incomming message and forward to all users
-  socket.on('createMessage', function(theMessage) {
+  socket.on('createMessage', (theMessage, callback) => {
     console.log('incomming message: ', theMessage);
-    console.log('message: ', generateMessage("Hans", "Dit is de msg text!!!"));
+    if (callback) {
+      callback("This is from server");
+    }
+
+    // console.log('message: ', generateMessage("Hans", "Dit is de msg text!!!"));
 
     // to send to nobody but self
     var welcomeMessage = `Hi ${theMessage.from}, welkom in the chat!`;
-    console.log(welcomeMessage);
+    // console.log(welcomeMessage);
     socket.emit('newMessage', generateMessage("Admin", welcomeMessage));
 
     // to send to everybody but self
@@ -37,8 +41,6 @@ io.on('connection', (socket) => {
     // to send to everybody
     var message = generateMessage(theMessage.from, theMessage.text);
     io.emit('newMessage', message);
-
-
   });
 })
 
