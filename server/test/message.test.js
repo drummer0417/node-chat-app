@@ -23,9 +23,12 @@ describe('UTILS generateMessage', () => {
 describe('UTILS generateLocationMessage', () => {
 
   it('Should generaete a correct loocation message', () => {
-    var generatedLocationMessage = generateLocationMessage("Admin", "54,123", "5.123");
-
-    expect(generatedLocationMessage).toContain({ "from": "Admin", "url": "https://google.com/maps?q=54,123,5.123" });
+    var url = "https://google.com/maps?q=54.123,5.123";
+    var lat = "54.123";
+    var lon = "5.123"
+    var from = "Admin"
+    var generatedLocationMessage = generateLocationMessage(from, lat, lon); -
+    expect(generatedLocationMessage).toInclude({ from, url });
     expect(generatedLocationMessage.createdAt).toBeA('number');
   })
 
