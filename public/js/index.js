@@ -68,6 +68,7 @@ locationButton.on('click', function() {
     locationButton.removeAttr('disabled').text('Send location');
     console.log('Position: ', position.coords.latitude + ', ' + position.coords.longitude);
     socket.emit('createLocationMessage', {
+      "from": jQuery('#name').val(),
       "latitude": position.coords.latitude,
       "longitude": position.coords.longitude
     })
