@@ -24,7 +24,7 @@ io.on('connection', (socket) => {
   // listen for incomming message and forward to all users
   socket.on('createMessage', (theMessage, callback) => {
     console.log('incomming message: ', theMessage);
-    if(callback) {
+    if (callback) {
       callback("Ok");
     }
     // to send to nobody but self
@@ -41,7 +41,8 @@ io.on('connection', (socket) => {
 
   socket.on('createLocationMessage', (location) => {
     console.log(`location: ${JSON.stringify(location)}`);
-    io.emit('newLocationMessage', generateLocationMessage("Admin", location.latitude, location.longitude));
+    io.emit('newLocationMessage', generateLocationMessage("Admin", location.latitude,
+      location.longitude));
     // io.emit('newLocationMessage', `https://google.com/maps?q=${location.latitude},${location.longitude}`);
   })
 })
