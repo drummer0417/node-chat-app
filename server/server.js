@@ -4,6 +4,7 @@ const express = require('express');
 const socketIO = require('socket.io');
 
 const { generateMessage, generateLocationMessage } = require('./utils/message');
+const { isRealString } = require('./utils/validation');
 
 const publicPath = path.join(__dirname, '../public');
 const port = process.env.PORT || 3000;
@@ -32,6 +33,14 @@ io.on('connection', (socket) => {
     // to send to everybody
     var message = generateMessage(theMessage.from, theMessage.text);
     io.emit('newMessage', message);
+  });
+
+  socket.on('join', (params, callback) => {
+    if(!isRealString(params.name) || !isRealString(params.room)) {
+      callback('Name and Room must have a value');
+    } else {
+      callback();
+    }
   });
 
   socket.on('createLocationMessage', (request) => {
