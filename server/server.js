@@ -25,8 +25,9 @@ app.use(express.static(publicPath));
 io.on('connection', (socket) => {
   console.log(`Hi new user!`);
 
+
   socket.on('join', (params, callback) => {
-    if(!isRealString(params.name) || !isRealString(params.room)) {
+    if (!isRealString(params.name) || !isRealString(params.room)) {
       callback('Name and Room must have a value');
     } else {
 
@@ -36,6 +37,9 @@ io.on('connection', (socket) => {
       users.removeUser(socket.id);
       // add user to room
       users.addUser(socket.id, params.name, params.room);
+      console.log('All users: --------------------------------------------\n', JSON.stringify(
+        users.users, undefined, 2));
+
       io.to(params.room).emit('updateUsersList', users.getUserList(params.room));
 
       // socket.leave('the room name);
@@ -45,7 +49,8 @@ io.on('connection', (socket) => {
       socket.emit('newMessage', generateMessage("Admin", welcomeMessage));
 
       // to send to everybody in the room but self
-      socket.broadcast.to(params.room).emit('newMessage', generateMessage("Admin", `${params.name} joined the chat`));
+      socket.broadcast.to(params.room).emit('newMessage', generateMessage("Admin",
+        `${params.name} joined the chat`));
 
       callback();
     }
@@ -57,7 +62,7 @@ io.on('connection', (socket) => {
     callback("Ok");
 
     // to send to everybody
-    if(theMessage.text && theMessage.text.length > 0) {
+    if (theMessage.text && theMessage.text.length > 0) {
       var message = generateMessage(theMessage.from, theMessage.text);
       io.emit('newMessage', message);
     }
@@ -77,9 +82,10 @@ io.on('connection', (socket) => {
     console.log('client was disconnected');
 
     var leavingUser = users.removeUser(socket.id);
-    if(leavingUser) {
+    if (leavingUser) {
       io.to(leavingUser.room).emit('updateUsersList', users.getUserList(leavingUser.room));
-      io.to(leavingUser.room).emit('newMessage', generateMessage("Admin", `${leavingUser.name} has left the chat`));
+      io.to(leavingUser.room).emit('newMessage', generateMessage("Admin",
+        `${leavingUser.name} has left the chat`));
     }
   });
 
