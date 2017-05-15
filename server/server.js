@@ -63,19 +63,17 @@ io.on('connection', (socket) => {
 
     // to send to everybody
     if (theMessage.text && theMessage.text.length > 0) {
-      var message = generateMessage(theMessage.from, theMessage.text);
-      io.emit('newMessage', message);
+      var user = users.getUser(socket.id);
+      io.to(user.room).emit('newMessage', generateMessage(
+        theMessage.from, theMessage.text));
     }
-
-
   });
 
 
   socket.on('createLocationMessage', (request) => {
     console.log(`location: ${JSON.stringify(request)}`);
-    io.emit('newLocationMessage', generateLocationMessage(request.from, request.latitude,
-      request.longitude));
-    // io.emit('newLocationMessage', `https://google.com/maps?q=${location.latitude},${location.longitude}`);
+    io.to(users.getUserList(socket.id)).emit('newLocationMessage',
+      generateLocationMessage(request.from, request.latitude, request.longitude));
   });
 
   socket.on('disconnect', () => {
