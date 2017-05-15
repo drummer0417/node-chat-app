@@ -71,8 +71,8 @@ io.on('connection', (socket) => {
 
 
   socket.on('createLocationMessage', (request) => {
-    console.log(`location: ${JSON.stringify(request)}`);
-    io.to(users.getUserList(socket.id)).emit('newLocationMessage',
+    var user = users.getUser(socket.id);
+    io.to(user.room).emit('newLocationMessage',
       generateLocationMessage(request.from, request.latitude, request.longitude));
   });
 
@@ -86,7 +86,6 @@ io.on('connection', (socket) => {
         `${leavingUser.name} has left the chat`));
     }
   });
-
 });
 
 server.listen(port, () => {
