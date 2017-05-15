@@ -6,7 +6,7 @@ var generateMessage = (from, text) => {
     "text": text,
     "createdAt": moment().valueOf()
   }
-}
+};
 
 var generateLocationMessage = (from, lat, lon) => {
   return {
@@ -14,5 +14,6 @@ var generateLocationMessage = (from, lat, lon) => {
     "url": `https://google.com/maps?q=${lat},${lon}`,
     "createdAt": moment().valueOf()
   }
-}
+};
+
 module.exports = { generateMessage, generateLocationMessage };

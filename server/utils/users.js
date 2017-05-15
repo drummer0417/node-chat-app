@@ -48,6 +48,13 @@ class Users {
     });
     return userNames;
   }
+
+  getRoomList() {
+    var roomList = this.users.map((user) => {
+      return user.room;
+    });
+    return Array.from(new Set(roomList));
+  }
 }
 
 module.exports = { Users };

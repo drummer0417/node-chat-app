@@ -27,22 +27,20 @@ socket.on('connect', function() {
     if (error) {
       alert(error);
       window.location.href = '/';
-    } else {
-      console.log('no error in params');
     }
-  })
-
+  });
 });
 
 socket.on('updateUsersList', function(users) {
-  console.log('users list: ', users);
+
+  users.sort();
 
   // create an ol and add a li for every user in list users
   var ol = jQuery('<ol></ol>');
 
   users.forEach(function(user) {
     ol.append(jQuery('<li></li>').text(user));
-  })
+  });
   // add ol to div id='users'
   jQuery('#users').html(ol);
 
@@ -67,36 +65,29 @@ socket.on('newMessage', function(message) {
 
 socket.on('newLocationMessage', function(message) {
 
-  // var li = jQuery('<li></li>');
-  // var a = jQuery('<a target="_blank">My current location</a>');
-
-  // li.text(time + " " + message.from + ": ");
-  // a.attr('href', message.url);
-  // li.append(a);
   var time = moment(message.createdAt).format(timeMask);
   var template = jQuery('#location-message-template').html();
   var html = Mustache.render(template, {
     'url': message.url,
     'from': message.from,
     'createdAt': time
-  })
+  });
   jQuery('#messages').append(html);
   scrollToBottom();
-})
+});
 
-jQuery('#message-form').on('submit', function(e) {
-  console.log('in  onsubmit');
-  e.preventDefault();
+jQuery('#message-form').on('submit', function(f) {
+
+  f.preventDefault();
 
   var messageTextbox = jQuery('[name=message]');
 
   socket.emit('createMessage', {
     "text": messageTextbox.val()
   }, function(acc) {
-    console.log("result on server: ", acc);
     messageTextbox.val('');
-  })
-})
+  });
+});
 
 var locationButton = jQuery('#send-location');
 
@@ -109,11 +100,10 @@ locationButton.on('click', function() {
 
   navigator.geolocation.getCurrentPosition(function(position) {
     locationButton.removeAttr('disabled').text('Send location');
-    console.log('Position: ', position.coords.latitude + ', ' + position.coords.longitude);
     socket.emit('createLocationMessage', {
       "latitude": position.coords.latitude,
       "longitude": position.coords.longitude
-    })
+    });
   }, function() {
     alert('Not able to get location');
     locationButton.removeAttr('disabled').text('Send location');

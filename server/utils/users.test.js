@@ -22,13 +22,12 @@ describe('UTILS users', () => {
       id: '123',
       name: 'Hans',
       room: 'the room'
-    }
+    };
     var newUser = users.addUser(user.id, user.name, user.room);
 
     expect(newUser).toEqual(user);
     expect(users.users[4]).toEqual(user);
-
-  })
+  });
 
   it('Should return users for specified roomm', () => {
 
@@ -57,6 +56,4 @@ describe('UTILS users', () => {
     expect(users.removeUser('000')).toNotExist();
     expect(users.users.length).toBe(4);
   });
-
-
 });

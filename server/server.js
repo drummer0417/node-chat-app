@@ -23,8 +23,11 @@ app.use(express.static(publicPath));
 // socket.emit (no changes needed)
 
 io.on('connection', (socket) => {
-  console.log(`Hi new user!`);
 
+  socket.on('getRoomList', (callback) => {
+    console.log('In getRoomList');
+    callback(users.getRoomList());
+  });
 
   socket.on('join', (params, callback) => {
     if (!isRealString(params.name) || !isRealString(params.room)) {
@@ -53,7 +56,7 @@ io.on('connection', (socket) => {
         `${params.name} joined the chat`));
 
       callback();
-    }
+    };
   });
 
   // listen for incomming message and forward to all users
@@ -67,8 +70,8 @@ io.on('connection', (socket) => {
       if (user) {
         io.to(user.room).emit('newMessage', generateMessage(
           user.name, theMessage.text));
-      }
-    }
+      };
+    };
   });
 
   socket.on('createLocationMessage', (request) => {
@@ -76,7 +79,7 @@ io.on('connection', (socket) => {
     if (user) {
       io.to(user.room).emit('newLocationMessage',
         generateLocationMessage(user.name, request.latitude, request.longitude));
-    }
+    };
   });
 
   socket.on('disconnect', () => {
@@ -87,7 +90,7 @@ io.on('connection', (socket) => {
       io.to(leavingUser.room).emit('updateUsersList', users.getUserList(leavingUser.room));
       io.to(leavingUser.room).emit('newMessage', generateMessage(leavingUser.room,
         `${leavingUser.name} has left the chat`));
-    }
+    };
   });
 });
 
