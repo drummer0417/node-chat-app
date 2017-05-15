@@ -30,8 +30,10 @@ io.on('connection', (socket) => {
   });
 
   socket.on('join', (params, callback) => {
-    if (!isRealString(params.name) || !isRealString(params.room)) {
+    if(!isRealString(params.name) || !isRealString(params.room)) {
       callback('Name and Room must have a value');
+    } else if(users.exists(params.name, params.room)) {
+      callback(`User name "${params.name} / ${params.room}" already exists`);
     } else {
 
       socket.join(params.room);
@@ -65,9 +67,9 @@ io.on('connection', (socket) => {
     callback("Ok");
 
     // to send to everybody
-    if (isRealString(theMessage.text)) {
+    if(isRealString(theMessage.text)) {
       var user = users.getUser(socket.id);
-      if (user) {
+      if(user) {
         io.to(user.room).emit('newMessage', generateMessage(
           user.name, theMessage.text));
       };
@@ -76,7 +78,7 @@ io.on('connection', (socket) => {
 
   socket.on('createLocationMessage', (request) => {
     var user = users.getUser(socket.id);
-    if (user) {
+    if(user) {
       io.to(user.room).emit('newLocationMessage',
         generateLocationMessage(user.name, request.latitude, request.longitude));
     };
@@ -86,7 +88,7 @@ io.on('connection', (socket) => {
     console.log('client was disconnected');
 
     var leavingUser = users.removeUser(socket.id);
-    if (leavingUser) {
+    if(leavingUser) {
       io.to(leavingUser.room).emit('updateUsersList', users.getUserList(leavingUser.room));
       io.to(leavingUser.room).emit('newMessage', generateMessage(leavingUser.room,
         `${leavingUser.name} has left the chat`));

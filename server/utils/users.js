@@ -24,7 +24,7 @@ class Users {
 
   removeUser(id) {
     var removedUser = this.getUser(id);
-    if (removedUser) {
+    if(removedUser) {
       this.users = this.users.filter((user) => {
         return user.id != id;
       });
@@ -37,6 +37,13 @@ class Users {
       return user.id === id;
     });
     return user[0];
+  }
+
+  exists(name, room) {
+    var exist = this.users.filter((user) => {
+      return user.name === name && user.room === room;
+    })
+    return exist.length > 0;
   }
 
   getUserList(room) {
