@@ -12,6 +12,7 @@
 class Users {
 
   constructor() {
+    console.log('In Users constructor');
     this.users = [];
   }
 
@@ -23,7 +24,7 @@ class Users {
 
   removeUser(id) {
     var removedUser = this.getUser(id);
-    if(removedUser) {
+    if (removedUser) {
       this.users = this.users.filter((user) => {
         return user.id != id;
       });
