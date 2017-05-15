@@ -46,10 +46,10 @@ io.on('connection', (socket) => {
 
       // to send to nobody but self
       var welcomeMessage = `Hi ${params.name}, welcome in the chat!`;
-      socket.emit('newMessage', generateMessage("Admin", welcomeMessage));
+      socket.emit('newMessage', generateMessage(params.room, welcomeMessage));
 
       // to send to everybody in the room but self
-      socket.broadcast.to(params.room).emit('newMessage', generateMessage("Admin",
+      socket.broadcast.to(params.room).emit('newMessage', generateMessage(params.room,
         `${params.name} joined the chat`));
 
       callback();
@@ -62,18 +62,21 @@ io.on('connection', (socket) => {
     callback("Ok");
 
     // to send to everybody
-    if (theMessage.text && theMessage.text.length > 0) {
+    if (isRealString(theMessage.text)) {
       var user = users.getUser(socket.id);
-      io.to(user.room).emit('newMessage', generateMessage(
-        theMessage.from, theMessage.text));
+      if (user) {
+        io.to(user.room).emit('newMessage', generateMessage(
+          user.name, theMessage.text));
+      }
     }
   });
 
-
   socket.on('createLocationMessage', (request) => {
     var user = users.getUser(socket.id);
-    io.to(user.room).emit('newLocationMessage',
-      generateLocationMessage(request.from, request.latitude, request.longitude));
+    if (user) {
+      io.to(user.room).emit('newLocationMessage',
+        generateLocationMessage(user.name, request.latitude, request.longitude));
+    }
   });
 
   socket.on('disconnect', () => {
@@ -82,7 +85,7 @@ io.on('connection', (socket) => {
     var leavingUser = users.removeUser(socket.id);
     if (leavingUser) {
       io.to(leavingUser.room).emit('updateUsersList', users.getUserList(leavingUser.room));
-      io.to(leavingUser.room).emit('newMessage', generateMessage("Admin",
+      io.to(leavingUser.room).emit('newMessage', generateMessage(leavingUser.room,
         `${leavingUser.name} has left the chat`));
     }
   });

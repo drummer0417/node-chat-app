@@ -14,7 +14,7 @@ function scrollToBottom() {
   var lastMessageHeight = newMessage.prev().innerHeight();
   var sum = clientHeight + scrollTop + newMessageHeight + lastMessageHeight;
 
-  if(scrollHeight > clientHeight && clientHeight + scrollTop + newMessageHeight +
+  if (scrollHeight > clientHeight && clientHeight + scrollTop + newMessageHeight +
     lastMessageHeight >= scrollHeight) {
     messages.scrollTop(scrollHeight)
   };
@@ -24,7 +24,7 @@ socket.on('connect', function() {
   params = jQuery.deparam(window.location.search)
 
   socket.emit('join', params, function(error) {
-    if(error) {
+    if (error) {
       alert(error);
       window.location.href = '/';
     } else {
@@ -91,7 +91,6 @@ jQuery('#message-form').on('submit', function(e) {
   var messageTextbox = jQuery('[name=message]');
 
   socket.emit('createMessage', {
-    "from": params.name,
     "text": messageTextbox.val()
   }, function(acc) {
     console.log("result on server: ", acc);
@@ -102,7 +101,7 @@ jQuery('#message-form').on('submit', function(e) {
 var locationButton = jQuery('#send-location');
 
 locationButton.on('click', function() {
-  if(!navigator.geolocation) {
+  if (!navigator.geolocation) {
     return alert('Geolocation is not supported by this browser');
   }
   locationButton.attr(
@@ -112,7 +111,6 @@ locationButton.on('click', function() {
     locationButton.removeAttr('disabled').text('Send location');
     console.log('Position: ', position.coords.latitude + ', ' + position.coords.longitude);
     socket.emit('createLocationMessage', {
-      "from": params.name,
       "latitude": position.coords.latitude,
       "longitude": position.coords.longitude
     })
